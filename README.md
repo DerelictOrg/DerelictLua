@@ -1,9 +1,6 @@
 DerelictLua
 ============
 
-*Warning: this an unofficial Derelict binding. It has been adapted from the
-original Derelict3 project.*
-
 A dynamic binding to the [Lua][1] C API for the D Programming Language.
 
 The preferred way of using DerelictLua is with the
