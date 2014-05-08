@@ -130,7 +130,7 @@ enum {
 
 struct lua_Debug;
 
-extern( C ) nothrow alias lua_Hook  = void function( lua_State, lua_Debug* );
+extern( C ) nothrow alias lua_Hook  = void function( lua_State*, lua_Debug* );
 
 //lauxlib.h
 struct luaL_Reg {
