@@ -21,7 +21,7 @@ Put the following dependency into your project's package.json, like so:
 
 ##Using DerelictLua with manual management##
 
-See the [Building and Using Packages in DerelictOrg][3] post.
+See the [Using Derelict][3] page at The One With D.
 
 ##Setting up the Lua dynamic library##
 
@@ -72,7 +72,7 @@ the Lua 5.2 C API.
 
 [1]: http://www.lua.org/
 [2]: http://code.dlang.org/about
-[3]: http://dblog.aldacron.net/forum/index.php?topic=841.0
+[3]: http://dblog.aldacron.net/derelict-help/using-derelict/
 [4]: http://joedf.users.sourceforge.net/luabuilds/
 [5]: http://www.lua.org/ftp/
 [6]: https://github.com/DerelictOrg/DerelictUtil/wiki/DerelictUtil-for-Users
