@@ -32,7 +32,7 @@ private {
     import derelict.lua.types;
 }
 
-extern( C ) nothrow {
+extern( C ) @nogc nothrow {
     //lua.h
     alias da_lua_newstate = lua_State* function( lua_Alloc, void* );
     alias da_lua_close = void function( lua_State* );

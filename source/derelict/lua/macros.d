@@ -30,6 +30,9 @@ private {
     import derelict.lua.functions;
     import derelict.lua.types;
 }
+
+@nogc:
+
 //lua.h
 void lua_call( lua_State* L, int nargs, int nresults ) {
     lua_callk( L, nargs, nresults, 0, null );
