@@ -1,7 +1,7 @@
 DerelictLua
 ============
 
-A dynamic binding to the [Lua][1] C API for the D Programming Language.
+A dynamic binding to version 5.2 of the [Lua][1] scripting language for the D Programming Language.
 
 The preferred way of using DerelictLua is with the
 [DUB package and build manager][2].
