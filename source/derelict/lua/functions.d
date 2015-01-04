@@ -261,6 +261,7 @@ __gshared {
     da_lua_yieldk lua_yieldk;
     da_lua_resume lua_resume;
     da_lua_status lua_status;
+    da_lua_gc lua_gc;
     da_lua_error lua_error;
     da_lua_next lua_next;
     da_lua_concat lua_concat;
