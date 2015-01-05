@@ -124,6 +124,7 @@ class DerelictLuaLoader : SharedLibLoader {
         bindFunc( cast( void** )&lua_yieldk, "lua_yieldk" );
         bindFunc( cast( void** )&lua_resume, "lua_resume" );
         bindFunc( cast( void** )&lua_status, "lua_status" );
+        bindFunc( cast( void** )&lua_gc, "lua_gc" );
         bindFunc( cast( void** )&lua_error, "lua_error" );
         bindFunc( cast( void** )&lua_next, "lua_next" );
         bindFunc( cast( void** )&lua_concat, "lua_concat" );
