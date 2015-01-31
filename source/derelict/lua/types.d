@@ -27,16 +27,18 @@ DEALINGS IN THE SOFTWARE.
 */
 module derelict.lua.types;
 
+private import std.c.stdio : FILE;
+
 //lua.h
 // The minimum version of Lua with which this binding is compatible.
 enum LUA_VERSION_MAJOR ="5";
-enum LUA_VERSION_MINOR ="2";
-enum LUA_VERSION_NUM = 502;
+enum LUA_VERSION_MINOR ="3";
+enum LUA_VERSION_NUM = 503;
 enum LUA_VERSION_RELEASE = "0";
 
 enum LUA_VERSION = "Lua " ~ LUA_VERSION_MAJOR ~ "." ~ LUA_VERSION_MINOR;
 enum LUA_RELEASE = LUA_VERSION ~ "." ~ LUA_VERSION_RELEASE;
-enum LUA_COPYRIGHT = LUA_RELEASE ~ "  Copyright ( C ) 1994-2012 Lua.org, PUC-Rio";
+enum LUA_COPYRIGHT = LUA_RELEASE ~ "  Copyright (C) 1994-2015 Lua.org, PUC-Rio";
 enum LUA_AUTHORS = "R. Ierusalimschy, L. H. de Figueiredo, W. Celes";
 
 enum LUA_SIGNATURE = "\033Lua";
@@ -62,6 +64,7 @@ struct lua_State;
 
 extern( C ) nothrow {
     alias lua_CFunction = int function( lua_State* L );
+    alias lua_KFunction = int function( lua_State* L, int status, lua_KContext ctx );
     alias lua_Reader = const( char )* function( lua_State* L, void* ud, size_t* sz );
     alias lua_Writer = int function( lua_State* L, const( void )* p, size_t sz, void* ud );
     alias lua_Alloc = void* function( void* ud, void* ptr, size_t osize, size_t nsize );
@@ -88,19 +91,27 @@ enum {
 }
 
 alias lua_Number = double;
-alias lua_Integer = ptrdiff_t;
-alias lua_Unsigned = uint;
+alias lua_Integer = long;
+alias lua_Unsigned = ulong;
+alias lua_KContext = ptrdiff_t;
 
 enum {
     LUA_OPADD = 0,
     LUA_OPSUB = 1,
     LUA_OPMUL = 2,
-    LUA_OPDIV = 3,
-    LUA_OPMOD = 4,
-    LUA_OPPOW = 5,
-    LUA_OPUNM = 6,
+    LUA_OPMOD = 3,
+    LUA_OPPOW = 4,
+    LUA_OPDIV = 5,
+    LUA_OPIDIV= 6,
+    LUA_OPBAND= 7,
+    LUA_OPBOR = 8,
+    LUA_OPBXOR= 9,
+    LUA_OPSHL = 10,
+    LUA_OPSHR = 11,
+    LUA_OPUNM = 12,
+    LUA_OPBNOT= 13,
 
-    LUA_OPWQ = 0,
+    LUA_OPEQ = 0,
     LUA_OPLT = 1,
     LUA_OPLE = 2,
 
@@ -112,10 +123,7 @@ enum {
     LUA_GCSTEP = 5,
     LUA_GCSETPAUSE = 6,
     LUA_GCSETSTEPMUL = 7,
-    LUA_GCSETMAJORINC = 8,
     LUA_GCISRUNNING = 9,
-    LUA_GCGEN = 10,
-    LUA_GCINC = 11,
 
     LUA_HOOKCALL = 0,
     LUA_HOOKRET = 1,
@@ -129,7 +137,25 @@ enum {
     LUA_MASKCOUNT = 1 << LUA_HOOKCOUNT,
 }
 
-struct lua_Debug;
+struct lua_Debug {
+    int event;
+    const(char*) name;
+    const(char*) namewhat;
+    const(char*) what;
+    const(char*) source;
+    int currentline;
+    int linedefined;
+    int lastlinedefined;
+    ubyte nups;
+    ubyte nparams;
+    byte isvararg;
+    byte istailcall;
+    char[LUA_IDSIZE] short_src;
+    // private
+    void* i_ci;
+}
+
+enum LUA_ERRFILE = LUA_ERRERR + 1;
 
 extern( C ) nothrow alias lua_Hook  = void function( lua_State*, lua_Debug* );
 
@@ -139,7 +165,7 @@ struct luaL_Reg {
     lua_CFunction func;
 }
 
-enum LUA_NOREF = -2;
+enum int LUA_NOREF = -2;
 enum int LUA_REFNIL = -1;
 
 struct luaL_Buffer {
@@ -147,10 +173,13 @@ struct luaL_Buffer {
     size_t size;
     size_t n;
     lua_State* L;
-    char initb[];
+    char[ (0x80 * (void*).sizeof * lua_Integer.sizeof) ] initb;
 }
 
-struct luaL_Stream;
+struct luaL_Stream {
+    FILE *f;
+    lua_CFunction closef;
+}
 
 //lualib.h
 enum : string {
@@ -159,6 +188,7 @@ enum : string {
     LUA_IOLIBNAME = "io",
     LUA_OSLIBNAME = "os",
     LUA_STRLIBNAME = "string",
+    LUA_UTF8LIBNAME = "utf8",
     LUA_BITLIBNAME = "bit32",
     LUA_MATHLIBNAME = "math",
     LUA_DBLIBNAME = "debug",
@@ -171,10 +201,13 @@ alias LUAI_UMEM = size_t;
 alias LUAI_MEM = ptrdiff_t;
 alias LUA_NUMBER = double;
 alias LUAI_UACNUMBER = double;
-alias LUA_INTEGER = ptrdiff_t;
-alias LUA_UNSIGNED = uint;
+alias LUA_INTEGER = long;
+alias LUA_UNSIGNED = ulong;
+alias LUA_KCONTEXT = ptrdiff_t;
 
 enum LUA_NUMBER_SCAN = "%lf";
 enum LUA_NUMBER_FMT = "%.14g";
 enum LUAI_MAXSTACK = 1000000;
 enum LUAI_FIRSTPSEUDOIDX = -LUAI_MAXSTACK - 1000;
+enum LUA_IDSIZE = 60;
+enum LUAI_MAXSHORTLEN = 40;

@@ -50,9 +50,6 @@ lua_Number lua_tonumber( lua_State* L, int i ) {
 lua_Integer lua_tointeger( lua_State* L, int i ) {
     return lua_tointegerx( L, i, null );
 }
-lua_Unsigned lua_tounsigned( lua_State* L, int i ) {
-    return lua_tounsignedx( L, i, null );
-}
 
 void lua_pop( lua_State* L, int idx ) {
     lua_settop( L, ( -idx )-1 );
@@ -103,9 +100,23 @@ void lua_pushglobaltable( lua_State* L ) {
 const( char )* lua_tostring( lua_State* L, int idx ) {
     return lua_tolstring( L, idx, null );
 }
+
+void lua_insert( lua_State* L, int idx ) {
+    lua_rotate( L, idx, 1 );
+}
+
+void lua_remove( lua_State* L, int idx ) {
+    lua_rotate( L, idx, -1 );
+    lua_pop( L, 1 );
+}
+
+void lua_replace( lua_State* L, int idx ) {
+    lua_copy( L, -1, idx );
+    lua_pop( L, 1 );
+}
 //lauxlib.h
 void luaL_checkversion( lua_State* L ) {
-    luaL_checkversion_( L, LUA_VERSION_NUM );
+    luaL_checkversion_( L, LUA_VERSION_NUM, lua_Integer.sizeof * 16 + lua_Number.sizeof );
 }
 int luaL_loadfile( lua_State* L, const( char )* f ) {
     return luaL_loadfilex( L, f, null );
@@ -115,6 +126,7 @@ void luaL_newlibtable( lua_State* L, const( luaL_Reg )[] l ) {
     lua_createtable( L, 0, cast( int )( l.length ) - 1 );
 }
 void luaL_newlib( lua_State* L, luaL_Reg[] l ) {
+    luaL_checkversion( L );
     luaL_newlibtable( L, l );
     luaL_setfuncs( L, l.ptr, 0 );
 }
@@ -126,18 +138,6 @@ const( char )* luaL_checkstring( lua_State* L, int n ) {
 }
 const( char )* luaL_optstring( lua_State* L, int n, const( char )* d ) {
     return luaL_optlstring( L, n, d, null );
-}
-int luaL_checkint( lua_State* L, int n ){
-    return cast( int )luaL_checkinteger( L, n );
-}
-int luaL_optint( lua_State* L, int n, lua_Integer d ) {
-    return cast( int )luaL_optinteger( L, n, d );
-}
-long luaL_checklong( lua_State* L, int n ) {
-    return luaL_checkinteger( L, n );
-}
-long luaL_optlong( lua_State* L, int n, lua_Integer d ) {
-    return luaL_optinteger( L, ( n ), ( d ) );
 }
 const( char )* luaL_typename( lua_State* L, int i ) {
     return lua_typename( L, lua_type( L,i ) );
@@ -164,9 +164,7 @@ int luaL_loadbuffer( lua_State* L, const( char )* s, size_t sz, const( char )* n
   ( ( void )( ( B )->n < ( B )->size || luaL_prepbuffsize( ( B ), 1 ) ), \
    ( ( B )->b[( B )->n++] = ( c ) ) )
 #define luaL_addsize( B,s )   ( ( B )->n += ( s ) )*/
-void luaL_register( lua_State* L, const( char )* n, const( luaL_Reg )* l ) {
-    luaL_openlib( L, n, l, 0 );
-}
+
 //luaconf.h
 /*#define luai_writestring( s,l ) fwrite( ( s ), sizeof( char ), ( l ), stdout )
 #define luai_writeline()    ( luai_writestring( "\n", 1 ), fflush( stdout ) )
