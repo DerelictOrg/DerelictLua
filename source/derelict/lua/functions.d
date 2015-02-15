@@ -43,9 +43,6 @@ extern( C ) @nogc nothrow {
     alias da_lua_gettop = int function( lua_State* );
     alias da_lua_settop = void function( lua_State*, int );
     alias da_lua_pushvalue = void function( lua_State*, int );
-    alias da_lua_remove = void function( lua_State*, int );
-    alias da_lua_insert = void function( lua_State*, int );
-    alias da_lua_replace = void function( lua_State*, int );
     alias da_lua_copy = void function( lua_State*, int, int );
     alias da_lua_checkstack = int function( lua_State*, int sz );
     alias da_lua_xmove = void function( lua_State*, lua_State*, int );
@@ -57,7 +54,6 @@ extern( C ) @nogc nothrow {
     alias da_lua_typename = const( char )* function( lua_State*, int );
     alias da_lua_tonumberx = lua_Number function( lua_State*, int, int* );
     alias da_lua_tointegerx = lua_Integer function( lua_State*, int, int* );
-    alias da_lua_tounsignedx = lua_Unsigned function( lua_State*, int, int* );
     alias da_lua_toboolean = int function( lua_State*, int );
     alias da_lua_tolstring = const( char )* function( lua_State*, int, size_t* );
     alias da_lua_rawlen = size_t function( lua_State*, int );
@@ -71,7 +67,6 @@ extern( C ) @nogc nothrow {
     alias da_lua_pushnil = void function( lua_State* );
     alias da_lua_pushnumber = void function( lua_State*, lua_Number );
     alias da_lua_pushinteger = void function( lua_State*, lua_Integer );
-    alias da_lua_pushunsigned = void function( lua_State*, lua_Unsigned );
     alias da_lua_pushlstring = const( char )* function( lua_State*, const( char )*, size_t );
     alias da_lua_pushstring = const( char )* function( lua_State*, const( char )* );
     alias da_lua_pushvfstring = const( char )* function( lua_State*, const( char )*, va_list );
@@ -98,12 +93,11 @@ extern( C ) @nogc nothrow {
     alias da_lua_rawsetp = void function( lua_State*, int, const( void )* );
     alias da_lua_setmetatable = int function( lua_State*, int );
     alias da_lua_setuservalue = void function( lua_State*, int );
-    alias da_lua_callk = void function( lua_State*, int, int, int, lua_CFunction );
-    alias da_lua_getctx = int function( lua_State*, int* );
-    alias da_lua_pcallk = int function( lua_State*, int, int, int, int, lua_CFunction );
+    alias da_lua_callk = void function( lua_State*, int, int, lua_KContext , lua_KFunction );
+    alias da_lua_pcallk = int function( lua_State*, int, int, int, lua_KContext, lua_KFunction );
     alias da_lua_load = int function( lua_State*, lua_Reader, void*, const( char )*, const( char )* );
-    alias da_lua_dump = int function( lua_State*, lua_Writer, void* );
-    alias da_lua_yieldk = int function( lua_State*, int, int, lua_CFunction );
+    alias da_lua_dump = int function( lua_State*, lua_Writer, void*, int );
+    alias da_lua_yieldk = int function( lua_State*, int, lua_KContext, lua_KFunction );
     alias da_lua_resume = int function( lua_State*, lua_State*, int );
     alias da_lua_status = int function( lua_State* );
     alias da_lua_gc = int function( lua_State*, int, int );
@@ -125,9 +119,10 @@ extern( C ) @nogc nothrow {
     alias da_lua_gethook = lua_Hook function( lua_State* );
     alias da_lua_gethookmask = int function( lua_State* );
     alias da_lua_gethookcount = int function( lua_State* );
+    alias da_lua_rotate = void function( lua_State*, int, int );
 
     //lauxlib.h
-    alias da_luaL_checkversion_ = void function( lua_State*, lua_Number );
+    alias da_luaL_checkversion_ = void function( lua_State*, lua_Number, size_t );
     alias da_luaL_getmetafield = int function( lua_State*, int, const( char )* );
     alias da_luaL_callmeta = int function( lua_State*, int, const( char )* );
     alias da_luaL_tolstring = const( char )* function( lua_State*, int, size_t* );
@@ -138,8 +133,6 @@ extern( C ) @nogc nothrow {
     alias da_luaL_optnumber = lua_Number function( lua_State*, int, lua_Number );
     alias da_luaL_checkinteger = lua_Integer function( lua_State*, int );
     alias da_luaL_optinteger = lua_Integer function( lua_State*, int, lua_Integer );
-    alias da_luaL_checkunsigned = lua_Unsigned function( lua_State*, int );
-    alias da_luaL_optunsigned = lua_Unsigned function( lua_State*, int, lua_Unsigned );
     alias da_luaL_checkstack = void function( lua_State*, int, const( char )* );
     alias da_luaL_checktype = void function( lua_State*, int, int );
     alias da_luaL_checkany = void function( lua_State*, int );
@@ -172,8 +165,6 @@ extern( C ) @nogc nothrow {
     alias da_luaL_pushresult = void function( luaL_Buffer* );
     alias da_luaL_pushresultsize = void function( luaL_Buffer*, size_t );
     alias da_luaL_buffinitsize = char* function( lua_State*, luaL_Buffer*, size_t );
-    alias da_luaL_pushmodule = void function( lua_State*, const( char )*, int );
-    alias da_luaL_openlib = void function( lua_State*, const( char )*, const( luaL_Reg )*, int );
     //lualib.h
     alias da_luaopen_base = int function( lua_State* );
     alias da_luaopen_coroutine = int function( lua_State* );
@@ -182,6 +173,7 @@ extern( C ) @nogc nothrow {
     alias da_luaopen_os = int function( lua_State* );
     alias da_luaopen_string = int function( lua_State* );
     alias da_luaopen_bit32 = int function( lua_State* );
+    alias da_luaopen_utf8 = int function( lua_State* );
     alias da_luaopen_math = int function( lua_State* );
     alias da_luaopen_debug = int function( lua_State* );
     alias da_luaopen_package = int function( lua_State* );
@@ -198,9 +190,6 @@ __gshared {
     da_lua_gettop lua_gettop;
     da_lua_settop lua_settop;
     da_lua_pushvalue lua_pushvalue;
-    da_lua_remove lua_remove;
-    da_lua_insert lua_insert;
-    da_lua_replace lua_replace;
     da_lua_copy lua_copy;
     da_lua_checkstack lua_checkstack;
     da_lua_xmove lua_xmove;
@@ -212,7 +201,6 @@ __gshared {
     da_lua_typename lua_typename;
     da_lua_tonumberx lua_tonumberx;
     da_lua_tointegerx lua_tointegerx;
-    da_lua_tounsignedx lua_tounsignedx;
     da_lua_toboolean lua_toboolean;
     da_lua_tolstring lua_tolstring;
     da_lua_rawlen lua_rawlen;
@@ -226,7 +214,6 @@ __gshared {
     da_lua_pushnil lua_pushnil;
     da_lua_pushnumber lua_pushnumber;
     da_lua_pushinteger lua_pushinteger;
-    da_lua_pushunsigned lua_pushunsigned;
     da_lua_pushlstring lua_pushlstring;
     da_lua_pushstring lua_pushstring;
     da_lua_pushvfstring lua_pushvfstring;
@@ -254,7 +241,6 @@ __gshared {
     da_lua_setmetatable lua_setmetatable;
     da_lua_setuservalue lua_setuservalue;
     da_lua_callk lua_callk;
-    da_lua_getctx lua_getctx;
     da_lua_pcallk lua_pcallk;
     da_lua_load lua_load;
     da_lua_dump lua_dump;
@@ -280,6 +266,7 @@ __gshared {
     da_lua_gethook lua_gethook;
     da_lua_gethookmask lua_gethookmask;
     da_lua_gethookcount lua_gethookcount;
+    da_lua_rotate lua_rotate;
     da_luaL_checkversion_ luaL_checkversion_;
     da_luaL_getmetafield luaL_getmetafield;
     da_luaL_callmeta luaL_callmeta;
@@ -291,8 +278,6 @@ __gshared {
     da_luaL_optnumber luaL_optnumber;
     da_luaL_checkinteger luaL_checkinteger;
     da_luaL_optinteger luaL_optinteger;
-    da_luaL_checkunsigned luaL_checkunsigned;
-    da_luaL_optunsigned luaL_optunsigned;
     da_luaL_checkstack luaL_checkstack;
     da_luaL_checktype luaL_checktype;
     da_luaL_checkany luaL_checkany;
@@ -325,8 +310,6 @@ __gshared {
     da_luaL_pushresult luaL_pushresult;
     da_luaL_pushresultsize luaL_pushresultsize;
     da_luaL_buffinitsize luaL_buffinitsize;
-    da_luaL_pushmodule luaL_pushmodule;
-    da_luaL_openlib luaL_openlib;
     da_luaopen_base luaopen_base;
     da_luaopen_coroutine luaopen_coroutine;
     da_luaopen_table luaopen_table;
@@ -334,6 +317,7 @@ __gshared {
     da_luaopen_os luaopen_os;
     da_luaopen_string luaopen_string;
     da_luaopen_bit32 luaopen_bit32;
+    da_luaopen_utf8 luaopen_utf8;
     da_luaopen_math luaopen_math;
     da_luaopen_debug luaopen_debug;
     da_luaopen_package luaopen_package;
