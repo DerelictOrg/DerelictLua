@@ -147,7 +147,7 @@ struct luaL_Buffer {
     size_t size;
     size_t n;
     lua_State* L;
-    char initb[];
+    char[] initb;
 }
 
 struct luaL_Stream;
