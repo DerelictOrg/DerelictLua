@@ -36,7 +36,7 @@ enum LUA_VERSION_RELEASE = "0";
 
 enum LUA_VERSION = "Lua " ~ LUA_VERSION_MAJOR ~ "." ~ LUA_VERSION_MINOR;
 enum LUA_RELEASE = LUA_VERSION ~ "." ~ LUA_VERSION_RELEASE;
-enum LUA_COPYRIGHT = LUA_RELEASE ~ "  Copyright ( C ) 1994-2012 Lua.org, PUC-Rio";
+enum LUA_COPYRIGHT = LUA_RELEASE ~ "  Copyright (C) 1994-2012 Lua.org, PUC-Rio";
 enum LUA_AUTHORS = "R. Ierusalimschy, L. H. de Figueiredo, W. Celes";
 
 enum LUA_SIGNATURE = "\033Lua";
@@ -44,7 +44,7 @@ enum LUA_MULTRET = -1;
 
 enum LUA_REGISTRYINDEX = LUAI_FIRSTPSEUDOIDX;
 
-int lua_upvalueindex( int i ) {
+int lua_upvalueindex(int i) {
     return LUA_REGISTRYINDEX - i;
 }
 
@@ -60,11 +60,11 @@ enum {
 
 struct lua_State;
 
-extern( C ) nothrow {
-    alias lua_CFunction = int function( lua_State* L );
-    alias lua_Reader = const( char )* function( lua_State* L, void* ud, size_t* sz );
-    alias lua_Writer = int function( lua_State* L, const( void )* p, size_t sz, void* ud );
-    alias lua_Alloc = void* function( void* ud, void* ptr, size_t osize, size_t nsize );
+extern(C) nothrow {
+    alias lua_CFunction = int function(lua_State* L);
+    alias lua_Reader = const(char)* function(lua_State* L, void* ud, size_t* sz);
+    alias lua_Writer = int function(lua_State* L, const(void)* p, size_t sz, void* ud);
+    alias lua_Alloc = void* function(void* ud, void* ptr, size_t osize, size_t nsize);
 }
 
 enum {
@@ -131,11 +131,11 @@ enum {
 
 struct lua_Debug;
 
-extern( C ) nothrow alias lua_Hook  = void function( lua_State*, lua_Debug* );
+extern(C) nothrow alias lua_Hook  = void function(lua_State*, lua_Debug*);
 
 //lauxlib.h
 struct luaL_Reg {
-    const( char )* name;
+    const(char)* name;
     lua_CFunction func;
 }
 
