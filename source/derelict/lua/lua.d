@@ -38,9 +38,9 @@ private {
     import derelict.util.system;
 
     static if(Derelict_OS_Windows) {
-        enum libNames = "lua52.dll";
+        enum libNames = "lua53.dll";
     } else static if(Derelict_OS_Posix) {
-        enum libNames = "liblua5.2.so";
+        enum libNames = "liblua5.3.so";
     }
     else
         static assert(0, "Need to implement lua libNames for this operating system.");
@@ -61,22 +61,20 @@ class DerelictLuaLoader : SharedLibLoader {
         bindFunc(cast(void**)&lua_gettop, "lua_gettop");
         bindFunc(cast(void**)&lua_settop, "lua_settop");
         bindFunc(cast(void**)&lua_pushvalue, "lua_pushvalue");
-        bindFunc(cast(void**)&lua_remove, "lua_remove");
-        bindFunc(cast(void**)&lua_insert, "lua_insert");
-        bindFunc(cast(void**)&lua_replace, "lua_replace");
+        bindFunc(cast(void**)&lua_rotate, "lua_rotate");
         bindFunc(cast(void**)&lua_copy, "lua_copy");
         bindFunc(cast(void**)&lua_checkstack, "lua_checkstack");
         bindFunc(cast(void**)&lua_xmove, "lua_xmove");
         bindFunc(cast(void**)&lua_isnumber, "lua_isnumber");
         bindFunc(cast(void**)&lua_isstring, "lua_isstring");
         bindFunc(cast(void**)&lua_iscfunction, "lua_iscfunction");
+        bindFunc(cast(void**)&lua_isinteger, "lua_isinteger");
         bindFunc(cast(void**)&lua_isuserdata, "lua_isuserdata");
         bindFunc(cast(void**)&lua_type, "lua_type");
         bindFunc(cast(void**)&lua_typename, "lua_typename");
         bindFunc(cast(void**)&lua_typename, "lua_typename");
         bindFunc(cast(void**)&lua_tonumberx, "lua_tonumberx");
         bindFunc(cast(void**)&lua_tointegerx, "lua_tointegerx");
-        bindFunc(cast(void**)&lua_tounsignedx, "lua_tounsignedx");
         bindFunc(cast(void**)&lua_toboolean, "lua_toboolean");
         bindFunc(cast(void**)&lua_tolstring, "lua_tolstring");
         bindFunc(cast(void**)&lua_rawlen, "lua_rawlen");
@@ -90,7 +88,6 @@ class DerelictLuaLoader : SharedLibLoader {
         bindFunc(cast(void**)&lua_pushnil, "lua_pushnil");
         bindFunc(cast(void**)&lua_pushnumber, "lua_pushnumber");
         bindFunc(cast(void**)&lua_pushinteger, "lua_pushinteger");
-        bindFunc(cast(void**)&lua_pushunsigned, "lua_pushunsigned");
         bindFunc(cast(void**)&lua_pushlstring, "lua_pushlstring");
         bindFunc(cast(void**)&lua_pushstring, "lua_pushstring");
         bindFunc(cast(void**)&lua_pushvfstring, "lua_pushvfstring");
@@ -102,6 +99,7 @@ class DerelictLuaLoader : SharedLibLoader {
         bindFunc(cast(void**)&lua_getglobal, "lua_getglobal");
         bindFunc(cast(void**)&lua_gettable, "lua_gettable");
         bindFunc(cast(void**)&lua_getfield, "lua_getfield");
+        bindFunc(cast(void**)&lua_geti, "lua_geti");
         bindFunc(cast(void**)&lua_rawget, "lua_rawget");
         bindFunc(cast(void**)&lua_rawgeti, "lua_rawgeti");
         bindFunc(cast(void**)&lua_rawgetp, "lua_rawgetp");
@@ -117,18 +115,19 @@ class DerelictLuaLoader : SharedLibLoader {
         bindFunc(cast(void**)&lua_setmetatable, "lua_setmetatable");
         bindFunc(cast(void**)&lua_setuservalue, "lua_setuservalue");
         bindFunc(cast(void**)&lua_callk, "lua_callk");
-        bindFunc(cast(void**)&lua_getctx, "lua_getctx");
         bindFunc(cast(void**)&lua_pcallk, "lua_pcallk");
         bindFunc(cast(void**)&lua_load, "lua_load");
         bindFunc(cast(void**)&lua_dump, "lua_dump");
         bindFunc(cast(void**)&lua_yieldk, "lua_yieldk");
         bindFunc(cast(void**)&lua_resume, "lua_resume");
         bindFunc(cast(void**)&lua_status, "lua_status");
+        bindFunc(cast(void**)&lua_isyieldable, "lua_isyieldable");
         bindFunc(cast(void**)&lua_gc, "lua_gc");
         bindFunc(cast(void**)&lua_error, "lua_error");
         bindFunc(cast(void**)&lua_next, "lua_next");
         bindFunc(cast(void**)&lua_concat, "lua_concat");
         bindFunc(cast(void**)&lua_len, "lua_len");
+        bindFunc(cast(void**)&lua_stringtonumber, "lua_stringtonumber");
         bindFunc(cast(void**)&lua_getallocf, "lua_getallocf");
         bindFunc(cast(void**)&lua_getstack, "lua_getstack");
         bindFunc(cast(void**)&lua_getinfo, "lua_getinfo");
@@ -153,8 +152,6 @@ class DerelictLuaLoader : SharedLibLoader {
         bindFunc(cast(void**)&luaL_optnumber, "luaL_optnumber");
         bindFunc(cast(void**)&luaL_checkinteger, "luaL_checkinteger");
         bindFunc(cast(void**)&luaL_optinteger, "luaL_optinteger");
-        bindFunc(cast(void**)&luaL_checkunsigned, "luaL_checkunsigned");
-        bindFunc(cast(void**)&luaL_optunsigned, "luaL_optunsigned");
         bindFunc(cast(void**)&luaL_checkstack, "luaL_checkstack");
         bindFunc(cast(void**)&luaL_checktype, "luaL_checktype");
         bindFunc(cast(void**)&luaL_checkany, "luaL_checkany");
@@ -187,14 +184,13 @@ class DerelictLuaLoader : SharedLibLoader {
         bindFunc(cast(void**)&luaL_pushresult, "luaL_pushresult");
         bindFunc(cast(void**)&luaL_pushresultsize, "luaL_pushresultsize");
         bindFunc(cast(void**)&luaL_buffinitsize, "luaL_buffinitsize");
-        bindFunc(cast(void**)&luaL_pushmodule, "luaL_pushmodule");
-        bindFunc(cast(void**)&luaL_openlib, "luaL_openlib");
         bindFunc(cast(void**)&luaopen_base, "luaopen_base");
         bindFunc(cast(void**)&luaopen_coroutine, "luaopen_coroutine");
         bindFunc(cast(void**)&luaopen_table, "luaopen_table");
         bindFunc(cast(void**)&luaopen_io, "luaopen_io");
         bindFunc(cast(void**)&luaopen_os, "luaopen_os");
         bindFunc(cast(void**)&luaopen_string, "luaopen_string");
+        bindFunc(cast(void**)&luaopen_utf8, "luaopen_utf8");
         bindFunc(cast(void**)&luaopen_bit32, "luaopen_bit32");
         bindFunc(cast(void**)&luaopen_math, "luaopen_math");
         bindFunc(cast(void**)&luaopen_debug, "luaopen_debug");
