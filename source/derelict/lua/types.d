@@ -31,7 +31,7 @@ module derelict.lua.types;
 // The minimum version of Lua with which this binding is compatible.
 enum LUA_VERSION_MAJOR ="5";
 enum LUA_VERSION_MINOR ="2";
-enum LUA_VERSION_NUM = 500;
+enum LUA_VERSION_NUM = 502;
 enum LUA_VERSION_RELEASE = "0";
 
 enum LUA_VERSION = "Lua " ~ LUA_VERSION_MAJOR ~ "." ~ LUA_VERSION_MINOR;
