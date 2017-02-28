@@ -1,0 +1,10 @@
+name "derelict-lua"
+description "A dynamic binding to the Lua scripting language library."
+homepage "https://github.com/DerelictOrg/DerelictLua"
+license "Boost"
+authors "Richard Cattermole" "Jonathan Giroux" "Kyle Hunter" "Mike Parker"
+
+targetName "DerelictLua"
+targetPath "lib"
+
+dependency "derelict-util" version="~>3.0.0-alpha.2"
