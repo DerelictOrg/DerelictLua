@@ -40,7 +40,7 @@ private {
     static if(Derelict_OS_Windows) {
         enum libNames = "lua53.dll";
     } else static if(Derelict_OS_Posix) {
-        enum libNames = "liblua5.3.so";
+        enum libNames = "liblua.so.5.3";
     }
     else
         static assert(0, "Need to implement lua libNames for this operating system.");
