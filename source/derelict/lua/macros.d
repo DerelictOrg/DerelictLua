@@ -31,10 +31,10 @@ private {
     import derelict.lua.types;
 }
 
-@nogc:
+@nogc nothrow:
 
 //lua.h
-ptrdiff_t lua_getextraspace(lua_State* L) {
+ptrdiff_t lua_getextraspace(lua_State* L) pure {
     return cast(ptrdiff_t)(cast(void*)L - LUA_EXTRASPACE);
 }
 
