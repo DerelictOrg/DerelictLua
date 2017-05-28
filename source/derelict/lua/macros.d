@@ -34,7 +34,7 @@ private {
 @nogc nothrow:
 
 //lua.h
-ptrdiff_t lua_getextraspace(lua_State* L) pure {
+ptrdiff_t lua_getextraspace(lua_State* L) {
     return cast(ptrdiff_t)(cast(void*)L - LUA_EXTRASPACE);
 }
 
