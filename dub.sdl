@@ -7,4 +7,4 @@ authors "Richard Cattermole" "Jonathan Giroux" "Kyle Hunter" "Mike Parker"
 targetName "DerelictLua"
 targetPath "lib"
 
-dependency "derelict-util" version="~>3.0.0-alpha.2"
+dependency "derelict-util" version="~>3.0.0-beta.1"
