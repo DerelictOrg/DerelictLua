@@ -39,6 +39,8 @@ private {
 
     static if(Derelict_OS_Windows) {
         enum libNames = "lua53.dll";
+    } else static if(Derelict_OS_Mac) {
+        enum libNames = "liblua.5.3.dylib";
     } else static if(Derelict_OS_Posix) {
         enum libNames = "liblua.so.5.3";
     }
