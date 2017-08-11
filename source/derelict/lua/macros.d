@@ -31,7 +31,7 @@ private {
     import derelict.lua.types;
 }
 
-@nogc:
+@nogc nothrow:
 
 //lua.h
 ptrdiff_t lua_getextraspace(lua_State* L) {
