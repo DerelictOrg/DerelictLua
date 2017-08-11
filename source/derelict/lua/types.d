@@ -55,7 +55,7 @@ enum LUA_MULTRET = -1;
 
 enum LUA_REGISTRYINDEX = -LUAI_MAXSTACK - 1000;
 
-int lua_upvalueindex(int i) {
+int lua_upvalueindex(int i) nothrow {
     return LUA_REGISTRYINDEX - i;
 }
 
