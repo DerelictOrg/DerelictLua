@@ -82,7 +82,7 @@ extern(C) @nogc nothrow {
     alias da_lua_getfield = int function(lua_State*, int, const(char)*);
     alias da_lua_geti = int function(lua_State*, int, lua_Integer);
     alias da_lua_rawget = int function(lua_State*, int);
-    alias da_lua_rawgeti = int function(lua_State*, int, int);
+    alias da_lua_rawgeti = int function(lua_State*, int, lua_Integer);
     alias da_lua_rawgetp = int function(lua_State*, int, const(void)*);
     alias da_lua_createtable = void function(lua_State*, int, int);
     alias da_lua_newuserdata = void* function(lua_State*, size_t);

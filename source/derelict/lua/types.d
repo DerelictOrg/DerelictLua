@@ -92,7 +92,7 @@ enum {
 }
 
 alias lua_Number = double;
-alias lua_Integer = ptrdiff_t;
+alias lua_Integer = long;
 alias lua_Unsigned = uint;
 alias lua_KContext = ptrdiff_t;
 alias LUA_NUMBER = lua_Number;
